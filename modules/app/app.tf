@@ -1,5 +1,5 @@
 resource "helm_release" "nginx_app" {
-  name             = var.nginx_app_name
+  name             = var.app_name
   repository       = "https://charts.bitnami.com/bitnami"
   chart            = "nginx"
   namespace        = var.app_namespace
