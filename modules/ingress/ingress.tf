@@ -1,10 +1,15 @@
 locals {
-  ingress_annotations_map = {
-    "AWS"   = "service.beta.kubernetes.io/aws-load-balancer-internal",
-    "Azure" = "service.beta.kubernetes.io/azure-load-balancer-internal"
+  ingress_annotations_key_map = {
+    "AWS"   = "service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme",
+    "Azure" = "service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal"
   }
+  ingress_annotation_key = lookup(local.ingress_annotations_key_map, var.cloud_provider)
 
-  ingress_annotation = lookup(local.ingress_annotations_map, var.cloud_provider)
+  ingress_annotations_value_map = {
+    "AWS"   = "internal",
+    "Azure" = "true"
+  }
+  ingress_annotation_value = lookup(local.ingress_annotations_value_map, var.cloud_provider)
 }
 
 resource "helm_release" "nginx_ingress" {
@@ -20,8 +25,8 @@ resource "helm_release" "nginx_ingress" {
       name  = "controller.service.type"
       value = "LoadBalancer"
       }, {
-      name  = "controller.service.annotations.${local.ingress_annotation}"
-      value = "true"
+      name  = "controller.service.annotations.${local.ingress_annotation_key}"
+      value = local.ingress_annotation_value
       }, {
       name  = "controller.replicaCount"
       value = "2"
