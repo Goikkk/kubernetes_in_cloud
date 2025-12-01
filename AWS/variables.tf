@@ -24,3 +24,8 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
   type    = string
 }
+
+variable "cluster_admin_arn" {
+  default = "arn:aws:iam::134653365075:user/rafalmkarwowski@gmail.com"
+  type    = string
+}
